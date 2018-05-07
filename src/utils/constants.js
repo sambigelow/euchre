@@ -15,8 +15,8 @@ export const VALUES = {
 };
 
 export const PLAYERS = {
-  user: 0,
-  comp1: 1,
-  partner: 2,
-  comp2: 3
+  USER: 'USER',
+  COMPUTER_ONE: 'COMPUTER_ONE',
+  PARTNER: 'PARTNER',
+  COMPUTER_TWO: 'COMPUTER_TWO',
 };
