@@ -1,8 +1,8 @@
-import { SUITS, VALUES } from './constants';
+import { suits as suitConstants, values as valueConstants } from './constants';
 import { shuffle } from './shuffle';
 
-const suits = Object.keys(SUITS).map(suit => SUITS[suit]);
-const values = Object.keys(VALUES).map(value => VALUES[value]);
+const suits = Object.keys(suitConstants).map(suit => suitConstants[suit]);
+const values = Object.keys(valueConstants).map(value => valueConstants[value]);
 
 const deck = suits.reduce((currentDeck, suit) => {
   const color = suit === 'spades' || suit === 'clubs' ? 'black' : 'red';

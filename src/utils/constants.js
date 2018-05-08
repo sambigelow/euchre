@@ -1,22 +1,37 @@
-export const SUITS = {
-  spades: 'spades',
-  hearts: 'hearts',
-  clubs: 'clubs',
-  diamonds: 'diamonds'
+export const suits = {
+  SPADES: 'spades',
+  HEARTS: 'hearts',
+  CLUBS: 'clubs',
+  DIAMONDS: 'diamonds',
 };
 
-export const VALUES = {
-  nine: '9',
-  ten: '10',
-  jack: 'Jack',
-  queen: 'Queen',
-  king: 'King',
-  ace: 'Ace'
+export const values = {
+  NINE: '9',
+  TEN: '10',
+  JACK: 'Jack',
+  QUEEN: 'Queen',
+  KING: 'King',
+  ACE: 'Ace',
 };
 
-export const PLAYERS = {
-  USER: 'USER',
-  COMPUTER_ONE: 'COMPUTER_ONE',
-  PARTNER: 'PARTNER',
-  COMPUTER_TWO: 'COMPUTER_TWO',
+export const players = {
+  USER: 'user',
+  COMPUTER_ONE: 'computer_one',
+  PARTNER: 'partner',
+  COMPUTER_TWO: 'computer_two',
+};
+
+export const stages = {
+  PRE_DEAL: 'pre-deal',
+  CALLING_STRICT: 'calling-strict',
+  CALLING_OPEN: 'calling-open',
+  DISCARD_CALLED: 'discard-called',
+  PLAYING: 'playing',
+};
+
+export const actionTypes = {
+  DEAL: 'DEAL',
+  PICK_IT_UP: 'PICK_IT_UP',
+  PASS: 'PASS',
+  CALL_TRUMP: 'CALL_TRUMP',
 };

@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { deal } from '../actions/deal';
-import { PLAYERS } from '../utils/constants';
 import styles from './App.css';
-import { getHands, getKitty } from '../reducers';
+// import { players } from '../utils/constants';
+// import { getHands, getKitty } from '../reducers';
 
 class App extends React.Component {
   render() {
@@ -31,6 +30,11 @@ class App extends React.Component {
 }
 
 export default connect(
-  state => ({ hands: getHands(state), kitty: getKitty(state) }),
+  state => ({
+    hands: Object.keys(state.players).map(
+      player => state.players[player].hand,
+    ),
+    kitty: state.kitty.cards,
+  }),
   { deal },
 )(App);
