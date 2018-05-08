@@ -28,13 +28,29 @@ const initialState = {
   },
   kitty: {
     flipped: false,
-    cards: []
+    cards: [],
   },
   players: {
-    [players.USER]: defaultPlayerState,
-    [players.PARTNER]: defaultPlayerState,
-    [players.COMPUTER_ONE]: defaultPlayerState,
-    [players.COMPUTER_TWO]: defaultPlayerState,
+    [players.USER]: {
+      id: players.USER,
+      name: 'You',
+      hand: [],
+    },
+    [players.PARTNER]: {
+      id: players.PARTNER,
+      name: 'Your Partner',
+      hand: [],
+    },
+    [players.COMPUTER_ONE]: {
+      id: players.COMPUTER_ONE,
+      name: 'Carl',
+      hand: [],
+    },
+    [players.COMPUTER_TWO]: {
+      id: players.COMPUTER_TWO,
+      name: 'Julie',
+      hand: [],
+    },
   },
 };
 

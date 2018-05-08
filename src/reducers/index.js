@@ -5,6 +5,8 @@ import initialState from './initial-state';
 const app = (state = initialState, { type, ...payload }) => {
   switch (type) {
     case actionTypes.DEAL:
+      const [ player0, player1, player2, player3 ] = state.round.sequence;
+
       return {
         ...state,
         round: {
@@ -16,10 +18,10 @@ const app = (state = initialState, { type, ...payload }) => {
           cards: payload.kitty,
         },
         players: {
-          [state.round.sequence[0]]: { hand: payload.hands[0] },
-          [state.round.sequence[1]]: { hand: payload.hands[1] },
-          [state.round.sequence[2]]: { hand: payload.hands[2] },
-          [state.round.sequence[3]]: { hand: payload.hands[3] },
+          [player0]: { ...state.players[player0], hand: payload.hands[0] },
+          [player1]: { ...state.players[player1], hand: payload.hands[1] },
+          [player2]: { ...state.players[player2], hand: payload.hands[2] },
+          [player3]: { ...state.players[player3], hand: payload.hands[3] },
         },
       };
     case actionTypes.PASS:
