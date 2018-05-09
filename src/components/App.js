@@ -10,12 +10,14 @@ import {
 } from '../actions/calling';
 import styles from './App.css';
 import { stages, suits } from '../utils/constants';
+import { playerNames } from '../utils/players';
+import players from '../utils/players';
 // import { players } from '../utils/constants';
 // import { getHands, getKitty } from '../reducers';
 
 class App extends React.Component {
   render() {
-    const { players, currentTurn, deal, kitty, sequence, stage } = this.props;
+    const { players: playerState, currentTurn, deal, kitty, stage } = this.props;
     const getButtons = () => {
       switch (stage) {
         case stages.PRE_DEAL:
@@ -41,17 +43,16 @@ class App extends React.Component {
         {getButtons()}
         <div>
           <h2>Hands</h2>
-          {sequence &&
-            sequence.map(player => (
+          {Object.keys(playerState).map(player => (
               <div
                 className={
-                  players[player].id === sequence[currentTurn] &&
+                  player === currentTurn &&
                   styles.ActivePlayerTurn
                 }
               >
                 <h4>{players[player].name}</h4>
                 <ul>
-                  {players[player].hand.map(card => (
+                  {playerState[player].hand.map(card => (
                     <li>{card.description}</li>
                   ))}
                 </ul>
@@ -72,7 +73,6 @@ export default connect(
     players: state.players,
     kitty: state.kitty.cards,
     currentTurn: state.round.currentTurn,
-    sequence: state.round.sequence,
     stage: state.round.stage,
   }),
   { deal, pickItUp, callClubs, callSpades, callHearts, callDiamonds },

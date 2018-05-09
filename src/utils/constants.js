@@ -14,19 +14,14 @@ export const values = {
   ACE: 'Ace',
 };
 
-export const players = {
-  USER: 'user',
-  COMPUTER_ONE: 'computer_one',
-  PARTNER: 'partner',
-  COMPUTER_TWO: 'computer_two',
-};
-
 export const stages = {
   PRE_DEAL: 'pre-deal',
   CALLING_STRICT: 'calling-strict',
   CALLING_OPEN: 'calling-open',
   DISCARD_CALLED: 'discard-called',
   PLAYING: 'playing',
+  DISCARDING: 'discarding',
+  SCREWING_DEALER: 'screwing-dealer',
 };
 
 export const actionTypes = {
@@ -34,4 +29,5 @@ export const actionTypes = {
   PICK_IT_UP: 'PICK_IT_UP',
   PASS: 'PASS',
   CALL_TRUMP: 'CALL_TRUMP',
+  DISCARD: 'DISCARD',
 };

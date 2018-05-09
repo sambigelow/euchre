@@ -2,10 +2,16 @@ import { combineReducers } from 'redux';
 import { actionTypes, stages } from '../utils/constants';
 import initialState from './initial-state';
 
+// reducers
+import round from './round';
+import players from './players';
+import game from './game';
+import kitty from './kitty';
+
 const app = (state = initialState, { type, ...payload }) => {
   switch (type) {
     case actionTypes.DEAL:
-      const [ player0, player1, player2, player3 ] = state.round.sequence;
+      const [player0, player1, player2, player3] = state.round.sequence;
 
       return {
         ...state,
@@ -104,4 +110,9 @@ const app = (state = initialState, { type, ...payload }) => {
   }
 };
 
-export default app;
+export default combineReducers({
+  round,
+  players,
+  game,
+  kitty,
+});
