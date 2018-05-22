@@ -5,27 +5,31 @@ export const playerNames = {
   COMPUTER_TWO: 'computer_two',
 };
 
-const players = {
-  [playerNames.USER]: {
+const players = [
+  {
     id: playerNames.USER,
-    nextTo: playerNames.COMPUTER_ONE,
+    hand: 0,
+    nextTo: 1,
     name: 'You',
   },
-  [playerNames.COMPUTER_ONE]: {
+  {
     id: playerNames.COMPUTER_ONE,
-    nextTo: playerNames.PARTNER,
+    hand: 1,
+    nextTo: 2,
     name: 'Your Partner',
   },
-  [playerNames.PARTNER]: {
+  {
     id: playerNames.PARTNER,
-    nextTo: playerNames.COMPUTER_TWO,
+    hand: 2,
+    nextTo: 3,
     name: 'Carl',
   },
-  [playerNames.COMPUTER_TWO]: {
+  {
     id: playerNames.COMPUTER_TWO,
-    nextTo: playerNames.COMPUTER_ONE,
+    hand: 3,
+    nextTo: 0,
     name: 'Julie',
   },
-};
+];
 
 export default players;
