@@ -10,66 +10,26 @@ import {
   callDiamonds,
 } from '../actions/calling';
 import styles from './App.css';
-import { stages, suits } from '../utils/constants';
-import { playerNames } from '../utils/players';
 import PLAYERS from '../utils/players';
+import Buttons from './Buttons';
 // import { players } from '../utils/constants';
 // import { getHands, getKitty } from '../reducers';
 
 class App extends React.Component {
   render() {
-    const {
-      players: playerState,
-      currentTurn,
-      deal,
-      kitty,
-      stage,
-      pickItUp,
-      pass,
-      callHearts,
-      callClubs,
-      callDiamonds,
-      callSpades,
-      hands,
-    } = this.props;
-    const getButtons = () => {
-      switch (stage) {
-        case stages.PRE_DEAL:
-          return <button onClick={deal}>Deal</button>;
-        case stages.CALLING_STRICT:
-          return (
-            <React.Fragment>
-              <button onClick={() => { pickItUp(kitty[0]) }}>Pick It Up</button>
-              <button onClick={pass}>Pass</button>
-            </React.Fragment>
-          );
-        case stages.CALLING_OPEN:
-          return (
-            <React.Fragment>
-              <button onClick={callDiamonds}>Diamonds</button>
-              <button onClick={callClubs}>Clubs</button>
-              <button onClick={callHearts}>Hearts</button>
-              <button onClick={callSpades}>Spades</button>
-            </React.Fragment>
-          );
-        default:
-          return null;
-      }
-    };
+    const { currentTurn, kitty, stage, hands } = this.props;
 
     return (
       <div>
-        {getButtons()}
+        <Buttons />
         <div>
           <h2>Hands</h2>
-          {hands.map((hand, i) => (
-            <div className={i === currentTurn && styles.ActivePlayerTurn}>
-              <h4>{PLAYERS[i].name}</h4>
-              <ul>
-                {hand.map(card => (
-                  <li>{card.description}</li>
-                ))}
-              </ul>
+          {hands.map((hand, playerIndex) => (
+            <div
+              className={playerIndex === currentTurn && styles.ActivePlayerTurn}
+            >
+              <h4>{PLAYERS[playerIndex].name}</h4>
+              <ul>{hand.map(card => <li>{card.description}</li>)}</ul>
             </div>
           ))}
         </div>
