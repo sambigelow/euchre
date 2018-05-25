@@ -11,4 +11,4 @@ const Kitty = ({ kitty }) => (
 
 Kitty.propTypes = { kitty: array };
 
-export default connect(state => ({ kitty: state.kitty.cards }))(Kitty);
+export default connect(state => ({ kitty: state.round.kitty }))(Kitty);

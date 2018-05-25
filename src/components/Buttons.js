@@ -69,7 +69,7 @@ export default connect(
   state => ({
     currentTurn: state.round.currentTurn,
     stage: state.round.stage,
-    cardToPickUp: state.kitty.cards[0],
+    cardToPickUp: state.round.kitty[0],
   }),
   { deal, pickItUp, pass, callClubs, callSpades, callHearts, callDiamonds },
 )(Buttons);

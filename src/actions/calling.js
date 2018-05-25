@@ -18,3 +18,8 @@ export const pickItUp = cardToPickUp => ({
 export const pass = () => ({
   type: actionTypes.PASS,
 });
+
+export const discard = cardToDiscard => ({
+  type: actionTypes.DISCARD,
+  cardToDiscard,
+});

@@ -11,19 +11,22 @@ export const initialRoundState = {
   },
   currentTurn: PLAYERS[0].nextTo,
   hands: [[], [], [], []],
+  kitty: [],
 };
 
 const round = (
   state = initialRoundState,
-  { type, cardToPickUp, hands, trump, cardToDiscard },
+  { type, cardToPickUp, dealtHands, dealtKitty, trump, cardToDiscard },
 ) => {
   switch (type) {
     case actionTypes.DEAL:
-      return {
+      const result = {
         ...state,
         stage: stages.CALLING_STRICT,
-        hands,
+        hands: dealtHands,
+        kitty: dealtKitty,
       };
+      return result;
     case actionTypes.PASS:
       const nextPassesCalled = state.passesCalled + 1;
       let newStage = state.stage;
@@ -50,23 +53,28 @@ const round = (
           ...state.hands.slice(state.dealer + 1),
         ],
         currentTurn: state.dealer,
+        kitty: state.kitty.slice(1),
       };
     case actionTypes.DISCARD:
-      const indexToRemove = state.hands[state.dealer].indexOf(
-        card => card === cardToDiscard,
-      );
+      const { hands, dealer } = state;
+      const indexToRemove = hands[state.dealer].indexOf(cardToDiscard);
+      const dealerHand = [
+        ...hands[dealer].slice(0, indexToRemove),
+        ...hands[dealer].slice(indexToRemove + 1),
+      ];
+
+      // console.log({ oldHand: state.hands[dealer], dealerHand, indexToRemove });
+
       return {
         ...state,
         stage: stages.PLAYING,
         hands: [
-          ...state.hands.slice(0, state.dealer),
-          [
-            ...state.hands[state.dealer].slice(0, indexToRemove),
-            state.hands[state.dealer].slice(indexToRemove + 1),
-          ],
-          ...state.hands.slice(state.dealer + 1),
+          ...hands.slice(0, dealer),
+          dealerHand,
+          ...hands.slice(dealer + 1),
         ],
-        currentTurn: PLAYERS[state.dealer].nextTo,
+        kitty: [cardToDiscard, ...state.kitty],
+        currentTurn: PLAYERS[dealer].nextTo,
       };
     case actionTypes.CALL_TRUMP:
       return {
