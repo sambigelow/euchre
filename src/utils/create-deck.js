@@ -10,7 +10,7 @@ const deck = suits.reduce((currentDeck, suit) => {
     value,
     suit,
     color,
-    description: `${value} of ${suit}`
+    description: `${value} of ${suit}`,
   }));
 
   return [...currentDeck, ...newCards];

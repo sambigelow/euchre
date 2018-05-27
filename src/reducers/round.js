@@ -30,16 +30,19 @@ const round = (
     case actionTypes.PASS:
       const nextPassesCalled = state.passesCalled + 1;
       let newStage = state.stage;
+      let nextTurn = PLAYERS[state.currentTurn].nextTo;
 
       if (nextPassesCalled >= 7) {
         newStage = stages.SCREWING_DEALER;
+        nextTurn = state.dealer;
       } else if (nextPassesCalled > 3) {
         newStage = stages.CALLING_OPEN;
       }
+
       return {
         ...state,
         passesCalled: nextPassesCalled,
-        currentTurn: PLAYERS[state.currentTurn].nextTo,
+        currentTurn: nextTurn,
         stage: newStage,
       };
     case actionTypes.PICK_IT_UP:
@@ -63,8 +66,6 @@ const round = (
         ...hands[dealer].slice(indexToRemove + 1),
       ];
 
-      // console.log({ oldHand: state.hands[dealer], dealerHand, indexToRemove });
-
       return {
         ...state,
         stage: stages.PLAYING,
@@ -80,6 +81,8 @@ const round = (
       return {
         ...state,
         trump,
+        currentTurn: PLAYERS[state.dealer].nextTo,
+        stage: stages.PLAYING,
       };
     default:
       return state;

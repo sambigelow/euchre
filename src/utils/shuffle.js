@@ -10,5 +10,6 @@ export const shuffle = deck => {
     deck[i] = deck[rand];
     deck[rand] = temp;
   }
+
   return deck;
 };

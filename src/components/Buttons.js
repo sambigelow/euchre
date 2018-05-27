@@ -40,12 +40,16 @@ const Buttons = ({
         </React.Fragment>
       );
     case stages.CALLING_OPEN:
+    case stages.SCREWING_DEALER:
       return (
         <React.Fragment>
           <button onClick={callDiamonds}>Diamonds</button>
           <button onClick={callClubs}>Clubs</button>
           <button onClick={callHearts}>Hearts</button>
           <button onClick={callSpades}>Spades</button>
+          {stage !== stages.SCREWING_DEALER && (
+            <button onClick={pass}>Pass</button>
+          )}
         </React.Fragment>
       );
     default:
