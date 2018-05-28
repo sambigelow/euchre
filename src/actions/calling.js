@@ -1,6 +1,6 @@
 import { actionTypes, suits } from '../utils/constants';
 
-const callTrump = trump => () => ({
+export const callTrump = trump => () => ({
   type: actionTypes.CALL_TRUMP,
   trump,
 });
