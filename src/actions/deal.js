@@ -1,7 +1,8 @@
 import { createDeck } from '../utils/create-deck';
+import { shuffle } from '../utils/shuffle';
 
 export const deal = () => {
-  const deck = createDeck();
+  const deck = shuffle(createDeck());
 
   return {
     type: 'DEAL',

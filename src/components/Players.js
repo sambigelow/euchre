@@ -16,11 +16,17 @@ const Players = ({ hands, currentTurn, discard, stage, dealer }) => (
         isCurrentTurn && stage === stages.DISCARDING && playerIndex === dealer;
 
       return (
-        <div className={isCurrentTurn && styles.ActivePlayerTurn}>
+        <div
+          key={playerIndex}
+          className={isCurrentTurn ? styles.ActivePlayerTurn : ''}
+        >
           <h4>{PLAYERS[playerIndex].name}</h4>
           <ul>
             {hand.map(card => (
-              <li onClick={isDiscarding ? () => discard(card) : undefined}>
+              <li
+                key={card.description}
+                onClick={isDiscarding ? () => discard(card) : undefined}
+              >
                 {card.description}
               </li>
             ))}
