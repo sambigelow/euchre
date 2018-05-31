@@ -4,16 +4,29 @@ import { array, number, func, string } from 'prop-types';
 import PLAYERS from '../utils/players';
 import { stages } from '../utils/constants';
 import { discard } from '../actions/calling';
+import { playCard } from '../actions/playing';
 
 import styles from './App.css';
 
-const Players = ({ hands, currentTurn, discard, stage, dealer }) => (
+const Players = ({ hands, currentTurn, discard, stage, dealer, playCard }) => (
   <React.Fragment>
     <h2>Hands</h2>
     {hands.map((hand, playerIndex) => {
-      const isCurrentTurn = playerIndex === currentTurn;
+      const isCurrentTurn =
+        stage === stages.PRE_DEAL
+          ? playerIndex === dealer
+          : playerIndex === currentTurn;
       const isDiscarding =
         isCurrentTurn && stage === stages.DISCARDING && playerIndex === dealer;
+      const isPlaying = isCurrentTurn && stage === stages.PLAYING;
+
+      const clickHandler = (card, playerIndex) => () => {
+        if (isDiscarding) {
+          discard(card);
+        } else if (isPlaying) {
+          playCard(card, playerIndex);
+        }
+      };
 
       return (
         <div
@@ -25,7 +38,7 @@ const Players = ({ hands, currentTurn, discard, stage, dealer }) => (
             {hand.map(card => (
               <li
                 key={card.description}
-                onClick={isDiscarding ? () => discard(card) : undefined}
+                onClick={clickHandler(card, playerIndex)}
               >
                 {card.description}
               </li>
@@ -42,6 +55,7 @@ Players.propTypes = {
   currentTurn: number,
   stage: string,
   discard: func,
+  playCard: func,
   dealer: number,
 };
 
@@ -52,5 +66,5 @@ export default connect(
     stage: state.round.stage,
     dealer: state.round.dealer,
   }),
-  { discard },
+  { discard, playCard },
 )(Players);

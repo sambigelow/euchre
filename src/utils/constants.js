@@ -30,4 +30,10 @@ export const actionTypes = {
   PASS: 'PASS',
   CALL_TRUMP: 'CALL_TRUMP',
   DISCARD: 'DISCARD',
+  PLAY_CARD: 'PLAY_CARD',
+};
+
+export const teams = {
+  USER_TEAM: 'userTeam',
+  OPPOSING_TEAM: 'opposingTeam',
 };

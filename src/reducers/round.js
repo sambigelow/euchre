@@ -1,14 +1,15 @@
-import { actionTypes, stages } from '../utils/constants';
+import { actionTypes, stages, teams } from '../utils/constants';
 import PLAYERS from '../utils/players';
 
 export const initialRoundState = {
   dealer: 0,
   stage: stages.PRE_DEAL,
   passesCalled: 0,
-  tricks: {
-    userTeam: 0,
-    opposingTeam: 0,
+  tricksWon: {
+    [teams.USER_TEAM]: [],
+    [teams.OPPOSING_TEAM]: [],
   },
+  currentTrick: [{}, {}, {}, {}],
   currentTurn: PLAYERS[0].nextTo,
   hands: [[], [], [], []],
   kitty: [],
@@ -16,7 +17,16 @@ export const initialRoundState = {
 
 const round = (
   state = initialRoundState,
-  { type, cardToPickUp, dealtHands, dealtKitty, trump, cardToDiscard },
+  {
+    type,
+    cardToPickUp,
+    dealtHands,
+    dealtKitty,
+    trump,
+    cardToDiscard,
+    playedByIndex,
+    playedCard,
+  },
 ) => {
   switch (type) {
     case actionTypes.DEAL:
@@ -83,6 +93,58 @@ const round = (
         trump,
         currentTurn: PLAYERS[state.dealer].nextTo,
         stage: stages.PLAYING,
+      };
+    case actionTypes.PLAY_CARD:
+      const playedCardIndex = state.hands[playedByIndex].indexOf(playedCard);
+      const isFinalCard =
+        state.currentTrick.filter(card => card.suit).length === 3;
+      let nextTrick = [
+        ...state.currentTrick.slice(0, playedByIndex),
+        playedCard,
+        ...state.currentTrick.slice(playedByIndex + 1),
+      ];
+
+      const findHighestIndex = () => 2;
+
+      const addTrick = (trick, team) => {
+        if (findHighestIndex(trick) % 2 === 0 && team === 'userTeam') {
+          if (team === 'userTeam') {
+            return trick;
+          }
+        }
+        return [];
+      };
+
+      const nextTricksWon = isFinalCard
+        ? {
+            userTeam: [
+              ...state.tricksWon.userTeam,
+              addTrick(nextTrick, 'userTeam'),
+            ],
+            opposingTeam: [
+              ...state.tricksWon.opposingTeam,
+              addTrick(nextTrick, 'opposingTeam'),
+            ],
+          }
+        : state.tricksWon;
+
+      if (isFinalCard) {
+        nextTrick = [{}, {}, {}, {}];
+      }
+
+      return {
+        ...state,
+        currentTurn: PLAYERS[playedByIndex].nextTo,
+        hands: [
+          ...state.hands.slice(0, playedByIndex),
+          [
+            ...state.hands[playedByIndex].slice(0, playedCardIndex),
+            ...state.hands[playedByIndex].slice(playedCardIndex + 1),
+          ],
+          ...state.hands.slice(playedByIndex + 1),
+        ],
+        currentTrick: nextTrick,
+        tricksWon: nextTricksWon,
       };
     default:
       return state;
