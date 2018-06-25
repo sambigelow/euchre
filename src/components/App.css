@@ -1,3 +1,7 @@
 .ActivePlayerTurn {
   color: red;
 }
+
+.WinningCard {
+  color: blue;
+}

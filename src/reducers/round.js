@@ -1,18 +1,23 @@
 import { actionTypes, stages, teams } from '../utils/constants';
 import PLAYERS from '../utils/players';
 
+const findWinningIndex = (trump, trick) => 2;
+
 export const initialRoundState = {
   dealer: 0,
   stage: stages.PRE_DEAL,
   passesCalled: 0,
+  currentTurn: PLAYERS[0].nextTo,
+  hands: [[], [], [], []],
+  kitty: [],
   tricksWon: {
     [teams.USER_TEAM]: [],
     [teams.OPPOSING_TEAM]: [],
   },
-  currentTrick: [{}, {}, {}, {}],
-  currentTurn: PLAYERS[0].nextTo,
-  hands: [[], [], [], []],
-  kitty: [],
+  currentTrick: {
+    winning: undefined,
+    cards: [{}, {}, {}, {}],
+  },
 };
 
 const round = (
@@ -97,39 +102,41 @@ const round = (
     case actionTypes.PLAY_CARD:
       const playedCardIndex = state.hands[playedByIndex].indexOf(playedCard);
       const isFinalCard =
-        state.currentTrick.filter(card => card.suit).length === 3;
-      let nextTrick = [
-        ...state.currentTrick.slice(0, playedByIndex),
-        playedCard,
-        ...state.currentTrick.slice(playedByIndex + 1),
-      ];
-
-      const findHighestIndex = () => 2;
-
-      const addTrick = (trick, team) => {
-        if (findHighestIndex(trick) % 2 === 0 && team === 'userTeam') {
-          if (team === 'userTeam') {
-            return trick;
-          }
-        }
-        return [];
+        state.currentTrick.cards.filter(card => card.suit).length === 3;
+      const winningIndex = findWinningIndex(state.currentTrick);
+      let nextTrick = {
+        winning: winningIndex,
+        cards: [
+          ...state.currentTrick.cards.slice(0, playedByIndex),
+          playedCard,
+          ...state.currentTrick.cards.slice(playedByIndex + 1),
+        ],
       };
 
-      const nextTricksWon = isFinalCard
-        ? {
-            userTeam: [
-              ...state.tricksWon.userTeam,
-              addTrick(nextTrick, 'userTeam'),
-            ],
-            opposingTeam: [
-              ...state.tricksWon.opposingTeam,
-              addTrick(nextTrick, 'opposingTeam'),
-            ],
-          }
-        : state.tricksWon;
+      let nextTricksWon;
 
       if (isFinalCard) {
-        nextTrick = [{}, {}, {}, {}];
+        nextTricksWon = {};
+        if (winningIndex % 2 === 0) {
+          nextTricksWon.userTeam = [
+            ...state.tricksWon.userTeam,
+            state.currentTrick,
+          ];
+          nextTricksWon.opposingTeam = state.tricksWon.opposingTeam;
+        } else {
+          nextTricksWon.userTeam = state.tricksWon.userTeam;
+          nextTricksWon.opposingTeam = [
+            ...state.tricksWon.opposingTeam,
+            state.currentTrick,
+          ];
+        }
+      }
+
+      if (isFinalCard) {
+        nextTrick = {
+          winning: undefined,
+          cards: [{}, {}, {}, {}],
+        };
       }
 
       return {
@@ -144,7 +151,7 @@ const round = (
           ...state.hands.slice(playedByIndex + 1),
         ],
         currentTrick: nextTrick,
-        tricksWon: nextTricksWon,
+        tricksWon: nextTricksWon || state.tricksWon,
       };
     default:
       return state;
