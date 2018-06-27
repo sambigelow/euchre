@@ -1,0 +1,17 @@
+findWinning(trump, playedFirst, trick) => index
+
+filter through cards in trick // (currentCard, currentWinningCard)
+  - Is first card?
+    * Assume it is winning
+  - Is same suit as winning card?
+    * Is it higher in value than current winning card?
+      ^ Return current card the winning card
+    * Else
+      ^ Return current winningCard
+  - Is it trump?
+    * if current winning card trump?
+      ^ if currentCard higher than currentWinningCard
+        + return currentCard
+      ^ else
+        + return currentWinningCard
+  - Return current winning card
