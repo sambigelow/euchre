@@ -35,10 +35,10 @@ const findLeftBower = trump => {
 
 const getOrderedSuit = (suit, trump) => {
   if (suit === trump) {
-    const minusJack = deckBySuit[suit].filter(card => card !== values.JACK);
+    const minusJack = deckBySuit[suit].filter(card => card.value !== values.JACK);
     return [...minusJack, findLeftBower(trump), findRightBower(trump)];
   } else if (suit === getLeftSuit(trump)) {
-    const minusJack = deckBySuit[suit].filter(card => card !== values.JACK);
+    const minusJack = deckBySuit[suit].filter(card => card.value !== values.JACK);
     return minusJack;
   } else {
     return deckBySuit[suit];
