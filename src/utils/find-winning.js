@@ -1,5 +1,12 @@
-import createDeck from './create-deck';
+import { createDeck } from './create-deck';
 import { suits, values } from './constants';
+
+const deck = createDeck();
+const deckBySuit = Object.keys(suits).reduce((result, suit) => {
+  const newSuit = suits[suit];
+  result[newSuit] = deck.filter(card => card.suit === newSuit);
+  return result;
+}, {});
 
 const getLeftSuit = trump => {
   switch (trump) {
@@ -14,29 +21,29 @@ const getLeftSuit = trump => {
     default:
       throw new Error('UNKNOWN SUIT');
   }
-}
-const deck = createDeck();
-const deckBySuit = Object.keys(suits).reduce((suit, result) => {
-  result[suit] = deck.filter(card => card.suit === suit);
-});
+};
 
-const findRightBower = trump => deck.find(card => card.value === values.JACK && card.suit === suits[trump]);
+const findRightBower = trump => {
+  const card = deckBySuit[trump].find(card => card.value === values.JACK);
+  return card;
+};
 const findLeftBower = trump => {
-  const leftSuit = getLeftSuit(trump);
-  return deck.find(card => card.suit === suits[leftSuit] && card.value === values.JACK);
+  return deckBySuit[getLeftSuit(trump)].find(
+    card => card.value === values.JACK,
+  );
 };
 
 const getOrderedSuit = (suit, trump) => {
   if (suit === trump) {
     const minusJack = deckBySuit[suit].filter(card => card !== values.JACK);
-    return [...minusJack, findLeftBower(trump), findRightBower(trump)]
+    return [...minusJack, findLeftBower(trump), findRightBower(trump)];
   } else if (suit === getLeftSuit(trump)) {
     const minusJack = deckBySuit[suit].filter(card => card !== values.JACK);
     return minusJack;
   } else {
     return deckBySuit[suit];
   }
-}
+};
 
 const getOrderedCards = trump => ({
   [suits.HEARTS]: getOrderedSuit(suits.HEARTS, trump),
@@ -47,27 +54,54 @@ const getOrderedCards = trump => ({
 
 const findWinning = (trump, trick) => {
   const orderedCards = getOrderedCards(trump);
+  const leftSuit = getLeftSuit(trump);
 
-  trick.reduce((currentCard, winningCard, i) => {
-    if (i === 0) {
-      return currentCard;
+  return trick.reduce((winner, currentCard, index) => {
+    if (index === 0) {
+      return { card: currentCard, index };
     }
 
-    if (currentCard.suit === winningCard.suit) {
-      if (orderedCards[currentCard.suit].findIndex(card => card.value === currentCard.value) >
-          orderedCards[currentCard.suit].findIndex(card => card.value === winningCard.value)) {
-        return currentCard;
+    if (winner.card.suit === trump) {
+      if (
+        currentCard.suit === trump ||
+        (currentCard.suit === leftSuit && currentCard.value === values.JACK)
+      ) {
+        const currentIndex = orderedCards[trump].findIndex(
+          card =>
+            card.value === currentCard.value && card.suit === currentCard.suit,
+        );
+        const winningIndex = orderedCards[trump].findIndex(
+          card =>
+            card.value === winner.card.value && card.suit === winner.card.suit,
+        );
+
+        return currentIndex > winningIndex
+          ? { card: currentCard, index }
+          : winner;
       } else {
-        return winningCard;
+        return winner;
       }
     }
-    
-    if (currentCard.suit === trump && winningCard.suit !== trump) {
-      return currentCard;
+
+    if (currentCard.suit === winner.card.suit) {
+      const currentRanking = orderedCards[currentCard.suit].findIndex(
+        card => card.value === currentCard.value,
+      );
+      const winningRanking = orderedCards[currentCard.suit].findIndex(card => {
+        return card.value === winner.card.value;
+      });
+
+      return currentRanking > winningRanking
+        ? { card: currentCard, index }
+        : winner;
     }
 
-    return winningCard;
-  });
+    if (currentCard.suit === trump && winner.card.suit !== trump) {
+      return { card: currentCard, index };
+    }
+
+    return winner;
+  }, null);
 };
 
 export default findWinning;
