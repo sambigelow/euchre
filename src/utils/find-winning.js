@@ -8,20 +8,7 @@ const deckBySuit = Object.keys(suits).reduce((result, suit) => {
   return result;
 }, {});
 
-const getLeftSuit = trump => {
-  switch (trump) {
-    case suits.CLUBS:
-      return suits.SPADES;
-    case suits.SPADES:
-      return suits.CLUBS;
-    case suits.DIAMONDS:
-      return suits.HEARTS;
-    case suits.HEARTS:
-      return suits.DIAMONDS;
-    default:
-      throw new Error('UNKNOWN SUIT');
-  }
-};
+
 
 const findRightBower = trump => {
   const card = deckBySuit[trump].find(card => card.value === values.JACK);
