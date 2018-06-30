@@ -16,19 +16,19 @@ const players = [
     id: playerNames.COMPUTER_ONE,
     hand: 1,
     nextTo: 2,
-    name: 'Your Partner',
+    name: 'Computer One',
   },
   {
     id: playerNames.PARTNER,
     hand: 2,
     nextTo: 3,
-    name: 'Carl',
+    name: 'Your Partner',
   },
   {
     id: playerNames.COMPUTER_TWO,
     hand: 3,
     nextTo: 0,
-    name: 'Julie',
+    name: 'Computer Two',
   },
 ];
 

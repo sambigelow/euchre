@@ -35,10 +35,14 @@ const findLeftBower = trump => {
 
 const getOrderedSuit = (suit, trump) => {
   if (suit === trump) {
-    const minusJack = deckBySuit[suit].filter(card => card.value !== values.JACK);
+    const minusJack = deckBySuit[suit].filter(
+      card => card.value !== values.JACK,
+    );
     return [...minusJack, findLeftBower(trump), findRightBower(trump)];
   } else if (suit === getLeftSuit(trump)) {
-    const minusJack = deckBySuit[suit].filter(card => card.value !== values.JACK);
+    const minusJack = deckBySuit[suit].filter(
+      card => card.value !== values.JACK,
+    );
     return minusJack;
   } else {
     return deckBySuit[suit];
@@ -52,11 +56,22 @@ const getOrderedCards = trump => ({
   [suits.CLUBS]: getOrderedSuit(suits.CLUBS, trump),
 });
 
-const findWinning = (trump, trick) => {
+const findWinning = (trump, cards, firstTurn) => {
+  const trickReordered = [
+    ...cards.slice(firstTurn),
+    ...cards.slice(0, firstTurn),
+  ];
+
+  const indexMap = [
+    firstTurn,
+    (firstTurn + 1) % 4,
+    (firstTurn + 2) % 4,
+    (firstTurn + 3) % 4,
+  ];
   const orderedCards = getOrderedCards(trump);
   const leftSuit = getLeftSuit(trump);
 
-  return trick.reduce((winner, currentCard, index) => {
+  const winning = trickReordered.reduce((winner, currentCard, index) => {
     if (index === 0) {
       return { card: currentCard, index };
     }
@@ -84,6 +99,7 @@ const findWinning = (trump, trick) => {
     }
 
     if (currentCard.suit === winner.card.suit) {
+      console.log({ orderedCards, currentCard });
       const currentRanking = orderedCards[currentCard.suit].findIndex(
         card => card.value === currentCard.value,
       );
@@ -102,6 +118,9 @@ const findWinning = (trump, trick) => {
 
     return winner;
   }, null);
+
+  winning.index = indexMap[winning.index];
+  return winning;
 };
 
 export default findWinning;

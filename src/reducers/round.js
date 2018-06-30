@@ -1,13 +1,14 @@
 import { actionTypes, stages, teams } from '../utils/constants';
 import PLAYERS from '../utils/players';
+import findWinning from '../utils/find-winning';
 
-const findWinningIndex = (trump, trick) => 2;
+const firstPlayer = PLAYERS[0].nextTo;
 
 export const initialRoundState = {
   dealer: 0,
   stage: stages.PRE_DEAL,
   passesCalled: 0,
-  currentTurn: PLAYERS[0].nextTo,
+  currentTurn: firstPlayer,
   hands: [[], [], [], []],
   kitty: [],
   tricksWon: {
@@ -15,6 +16,7 @@ export const initialRoundState = {
     [teams.OPPOSING_TEAM]: [],
   },
   currentTrick: {
+    firstTurn: firstPlayer,
     winning: undefined,
     cards: [{}, {}, {}, {}],
   },
@@ -103,14 +105,20 @@ const round = (
       const playedCardIndex = state.hands[playedByIndex].indexOf(playedCard);
       const isFinalCard =
         state.currentTrick.cards.filter(card => card.suit).length === 3;
-      const winningIndex = findWinningIndex(state.currentTrick);
+      const nextCards = [
+        ...state.currentTrick.cards.slice(0, playedByIndex),
+        playedCard,
+        ...state.currentTrick.cards.slice(playedByIndex + 1),
+      ];
+      const { index: winningIndex } = findWinning(
+        state.trump,
+        nextCards,
+        state.currentTrick.firstTurn,
+      );
       let nextTrick = {
         winning: winningIndex,
-        cards: [
-          ...state.currentTrick.cards.slice(0, playedByIndex),
-          playedCard,
-          ...state.currentTrick.cards.slice(playedByIndex + 1),
-        ],
+        firstTurn: state.currentTrick.firstTurn,
+        cards: nextCards,
       };
 
       let nextTricksWon;
@@ -135,13 +143,14 @@ const round = (
       if (isFinalCard) {
         nextTrick = {
           winning: undefined,
+          firstTurn: winningIndex,
           cards: [{}, {}, {}, {}],
         };
       }
 
       return {
         ...state,
-        currentTurn: PLAYERS[playedByIndex].nextTo,
+        currentTurn: isFinalCard ? winningIndex : PLAYERS[playedByIndex].nextTo,
         hands: [
           ...state.hands.slice(0, playedByIndex),
           [
