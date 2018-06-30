@@ -1,15 +1,22 @@
 import { actionTypes, stages, teams } from '../utils/constants';
 import PLAYERS from '../utils/players';
 import findWinning from '../utils/find-winning';
+import canPlayCard from '../utils/can-play-card';
+import { combineReducers } from 'redux';
 
 const firstPlayer = PLAYERS[0].nextTo;
+
+const initialHand = {
+  error: null,
+  cards: [],
+};
 
 export const initialRoundState = {
   dealer: 0,
   stage: stages.PRE_DEAL,
   passesCalled: 0,
   currentTurn: firstPlayer,
-  hands: [[], [], [], []],
+  hands: new Array(4).fill(initialHand),
   kitty: [],
   tricksWon: {
     [teams.USER_TEAM]: [],
@@ -22,12 +29,13 @@ export const initialRoundState = {
   },
 };
 
+const combined = combineReducers({});
+
 const round = (
   state = initialRoundState,
   {
     type,
     cardToPickUp,
-    dealtHands,
     dealtKitty,
     trump,
     cardToDiscard,
@@ -40,7 +48,6 @@ const round = (
       const result = {
         ...state,
         stage: stages.CALLING_STRICT,
-        hands: dealtHands,
         kitty: dealtKitty,
       };
       return result;
@@ -67,30 +74,16 @@ const round = (
         ...state,
         trump: cardToPickUp.suit,
         stage: stages.DISCARDING,
-        hands: [
-          ...state.hands.slice(0, state.dealer),
-          [...state.hands[state.dealer], cardToPickUp],
-          ...state.hands.slice(state.dealer + 1),
-        ],
         currentTurn: state.dealer,
         kitty: state.kitty.slice(1),
       };
     case actionTypes.DISCARD:
       const { hands, dealer } = state;
-      const indexToRemove = hands[state.dealer].indexOf(cardToDiscard);
-      const dealerHand = [
-        ...hands[dealer].slice(0, indexToRemove),
-        ...hands[dealer].slice(indexToRemove + 1),
-      ];
+      const indexToRemove = hands[state.dealer].cards.indexOf(cardToDiscard);
 
       return {
         ...state,
         stage: stages.PLAYING,
-        hands: [
-          ...hands.slice(0, dealer),
-          dealerHand,
-          ...hands.slice(dealer + 1),
-        ],
         kitty: [cardToDiscard, ...state.kitty],
         currentTurn: PLAYERS[dealer].nextTo,
       };
@@ -102,9 +95,33 @@ const round = (
         stage: stages.PLAYING,
       };
     case actionTypes.PLAY_CARD:
-      const playedCardIndex = state.hands[playedByIndex].indexOf(playedCard);
-      const isFinalCard =
-        state.currentTrick.cards.filter(card => card.suit).length === 3;
+      const playedCardCount = state.currentTrick.cards.filter(card => card.suit)
+        .length;
+      if (playedCardCount !== 0) {
+        if (
+          !canPlayCard(
+            playedCard,
+            state.hands[playedByIndex].cards,
+            state.currentTrick.cards[state.currentTrick.firstTurn],
+            state.trump,
+          )
+        ) {
+          console.log('cant play card');
+          return {
+            ...state,
+            hands: [
+              ...state.hands.slice(0, playedByIndex),
+              {
+                ...state.hands[state.playedByIndex],
+                error: "Can't play that card",
+              },
+              ...state.hands.slice(playedByIndex),
+            ],
+            ...state.hands,
+          };
+        }
+      }
+      const isFinalCard = playedCardCount === 3;
       const nextCards = [
         ...state.currentTrick.cards.slice(0, playedByIndex),
         playedCard,
@@ -113,7 +130,8 @@ const round = (
       const { index: winningIndex } = findWinning(
         state.trump,
         nextCards,
-        state.currentTrick.firstTurn,
+        state.currentTrick[state.currentTrick.firstTurn],
+        trump,
       );
       let nextTrick = {
         winning: winningIndex,
@@ -151,14 +169,6 @@ const round = (
       return {
         ...state,
         currentTurn: isFinalCard ? winningIndex : PLAYERS[playedByIndex].nextTo,
-        hands: [
-          ...state.hands.slice(0, playedByIndex),
-          [
-            ...state.hands[playedByIndex].slice(0, playedCardIndex),
-            ...state.hands[playedByIndex].slice(playedCardIndex + 1),
-          ],
-          ...state.hands.slice(playedByIndex + 1),
-        ],
         currentTrick: nextTrick,
         tricksWon: nextTricksWon || state.tricksWon,
       };

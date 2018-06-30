@@ -1,4 +1,7 @@
+import { suits } from './constants';
+
 const getLeftSuit = trump => {
+  console.log(trump);
   switch (trump) {
     case suits.CLUBS:
       return suits.SPADES;

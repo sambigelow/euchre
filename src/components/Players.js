@@ -9,17 +9,7 @@ import canPlayCard from '../utils/can-play-card';
 
 import styles from './App.css';
 
-const Players = ({
-  hands,
-  currentTurn,
-  discard,
-  stage,
-  dealer,
-  playCard,
-  firstTurn,
-  currentTrickCards,
-  trump
-}) => (
+const Players = ({ hands, currentTurn, discard, stage, dealer, playCard }) => (
   <React.Fragment>
     <h2>Hands</h2>
     {hands.map((hand, playerIndex) => {
@@ -35,11 +25,7 @@ const Players = ({
         if (isDiscarding) {
           discard(card);
         } else if (isPlaying) {
-          if (playerIndex === firstTurn || canPlayCard(card, hand, currentTrickCards[firstTurn], trump)) {
-            playCard(card, playerIndex);
-          } else {
-            console.error("Can't play that card");
-          }
+          playCard(card, playerIndex);
         }
       };
 
@@ -49,12 +35,14 @@ const Players = ({
           className={isCurrentTurn ? styles.ActivePlayerTurn : ''}
         >
           <h4>{PLAYERS[playerIndex].name}</h4>
+          {hand.error && <h6 style={{ color: 'red' }}>{hand.error}</h6>}
           <ul>
-            {hand.map(card => (
-              <li key={card.description} onClick={clickHandler(card)}>
-                {card.description}
-              </li>
-            ))}
+            {hand.cards &&
+              hand.cards.map(card => (
+                <li key={card.description} onClick={clickHandler(card)}>
+                  {card.description}
+                </li>
+              ))}
           </ul>
         </div>
       );
@@ -69,9 +57,6 @@ Players.propTypes = {
   discard: func,
   playCard: func,
   dealer: number,
-  firstTurn: number,
-  currentTrickCards: array,
-  trump: string,
 };
 
 export default connect(

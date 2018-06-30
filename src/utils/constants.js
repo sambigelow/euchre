@@ -31,6 +31,7 @@ export const actionTypes = {
   CALL_TRUMP: 'CALL_TRUMP',
   DISCARD: 'DISCARD',
   PLAY_CARD: 'PLAY_CARD',
+  CANT_PLAY_CARD: 'CANT_PLAY_CARD',
 };
 
 export const teams = {

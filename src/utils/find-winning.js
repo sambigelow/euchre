@@ -1,5 +1,6 @@
 import { createDeck } from './create-deck';
 import { suits, values } from './constants';
+import getLeftSuit from './get-left-suit';
 
 const deck = createDeck();
 const deckBySuit = Object.keys(suits).reduce((result, suit) => {
@@ -7,8 +8,6 @@ const deckBySuit = Object.keys(suits).reduce((result, suit) => {
   result[newSuit] = deck.filter(card => card.suit === newSuit);
   return result;
 }, {});
-
-
 
 const findRightBower = trump => {
   const card = deckBySuit[trump].find(card => card.value === values.JACK);
@@ -55,6 +54,8 @@ const findWinning = (trump, cards, firstTurn) => {
     (firstTurn + 2) % 4,
     (firstTurn + 3) % 4,
   ];
+
+  
   const orderedCards = getOrderedCards(trump);
   const leftSuit = getLeftSuit(trump);
 

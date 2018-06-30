@@ -22,6 +22,7 @@ const Buttons = ({
   callHearts,
   callDiamonds,
   pass,
+  dealer,
 }) => {
   switch (stage) {
     case stages.PRE_DEAL:
@@ -31,7 +32,7 @@ const Buttons = ({
         <React.Fragment>
           <button
             onClick={() => {
-              pickItUp(cardToPickUp);
+              pickItUp(cardToPickUp, dealer);
             }}
           >
             Pick It Up
@@ -74,6 +75,7 @@ export default connect(
     currentTurn: state.round.currentTurn,
     stage: state.round.stage,
     cardToPickUp: state.round.kitty[0],
+    dealer: state.round.dealer,
   }),
   { deal, pickItUp, pass, callClubs, callSpades, callHearts, callDiamonds },
 )(Buttons);
