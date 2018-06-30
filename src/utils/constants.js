@@ -32,6 +32,7 @@ export const actionTypes = {
   DISCARD: 'DISCARD',
   PLAY_CARD: 'PLAY_CARD',
   CANT_PLAY_CARD: 'CANT_PLAY_CARD',
+  PLAY_FOURTH_CARD: 'PLAY_FOURTH_CARD',
 };
 
 export const teams = {
