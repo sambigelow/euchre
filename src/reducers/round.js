@@ -29,8 +29,6 @@ export const initialRoundState = {
   },
 };
 
-const combined = combineReducers({});
-
 const round = (
   state = initialRoundState,
   {
@@ -97,30 +95,6 @@ const round = (
     case actionTypes.PLAY_CARD:
       const playedCardCount = state.currentTrick.cards.filter(card => card.suit)
         .length;
-      if (playedCardCount !== 0) {
-        if (
-          !canPlayCard(
-            playedCard,
-            state.hands[playedByIndex].cards,
-            state.currentTrick.cards[state.currentTrick.firstTurn],
-            state.trump,
-          )
-        ) {
-          console.log('cant play card');
-          return {
-            ...state,
-            hands: [
-              ...state.hands.slice(0, playedByIndex),
-              {
-                ...state.hands[state.playedByIndex],
-                error: "Can't play that card",
-              },
-              ...state.hands.slice(playedByIndex),
-            ],
-            ...state.hands,
-          };
-        }
-      }
       const isFinalCard = playedCardCount === 3;
       const nextCards = [
         ...state.currentTrick.cards.slice(0, playedByIndex),

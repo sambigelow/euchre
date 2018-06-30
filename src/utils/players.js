@@ -5,7 +5,7 @@ export const playerNames = {
   COMPUTER_TWO: 'computer_two',
 };
 
-const players = [
+const PLAYERS = [
   {
     id: playerNames.USER,
     hand: 0,
@@ -32,4 +32,7 @@ const players = [
   },
 ];
 
-export default players;
+export const firstPlayer = PLAYERS[0].nextTo;
+export const firstDealer = 0;
+
+export default PLAYERS;
