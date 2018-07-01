@@ -74,7 +74,7 @@ export default connect(
   state => ({
     currentTurn: state.round.currentTurn,
     stage: state.round.stage,
-    cardToPickUp: state.round.kitty[0],
+    cardToPickUp: state.kitty[0],
     dealer: state.round.dealer,
   }),
   { deal, pickItUp, pass, callClubs, callSpades, callHearts, callDiamonds },

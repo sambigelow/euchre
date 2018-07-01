@@ -25,6 +25,6 @@ const Kitty = ({ kitty, stage }) =>
 Kitty.propTypes = { kitty: array, stage: string };
 
 export default connect(state => ({
-  kitty: state.round.kitty,
+  kitty: state.kitty,
   stage: state.round.stage,
 }))(Kitty);

@@ -11,7 +11,7 @@ export const initialTrickState = {
 
 const currentTrick = (
   state = initialTrickState,
-  { type, playedCard, playedByIndex },
+  { type, playedCard, playedByIndex, winner },
 ) => {
   switch (type) {
     case actionTypes.PLAY_CARD:
@@ -21,7 +21,13 @@ const currentTrick = (
         ...state.cards.slice(playedByIndex),
       ];
     case actionTypes.PLAY_FOURTH_CARD:
-      return initialCards;
+      return {
+        firstTurn: winner.index,
+        winning: undefined,
+        cards: initialCards,
+      };
+    default:
+      return state;
   }
 };
 

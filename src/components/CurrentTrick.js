@@ -31,6 +31,6 @@ CurrentTrick.propTypes = {
 };
 
 export default connect(state => ({
-  currentTrick: state.round.currentTrick,
+  currentTrick: state.currentTrick,
   stage: state.round.stage,
 }))(CurrentTrick);

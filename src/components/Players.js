@@ -5,7 +5,6 @@ import PLAYERS from '../utils/players';
 import { stages } from '../utils/constants';
 import { discard } from '../actions/calling';
 import { playCard } from '../actions/playing';
-import canPlayCard from '../utils/can-play-card';
 
 import styles from './App.css';
 
@@ -28,6 +27,8 @@ const Players = ({ hands, currentTurn, discard, stage, dealer, playCard }) => (
           playCard(card, playerIndex);
         }
       };
+
+      console.log({ PLAYERS, playerIndex });
 
       return (
         <div
@@ -61,9 +62,9 @@ Players.propTypes = {
 
 export default connect(
   state => ({
-    hands: state.round.hands,
-    firstTurn: state.round.currentTrick.firstTurn,
-    currentTrickCards: state.round.currentTrick.cards,
+    hands: state.hands,
+    firstTurn: state.currentTrick.firstTurn,
+    currentTrickCards: state.currentTrick.cards,
     currentTurn: state.round.currentTurn,
     stage: state.round.stage,
     dealer: state.round.dealer,

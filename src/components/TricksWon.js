@@ -19,7 +19,7 @@ TricksWon.propTypes = {
 };
 
 export default connect(state => ({
-  userTricksCount: state.round.tricksWon.userTeam.length,
-  opposingTricksCount: state.round.tricksWon.opposingTeam.length,
+  userTricksCount: state.tricksWon.userTeam.length,
+  opposingTricksCount: state.tricksWon.opposingTeam.length,
   stage: state.round.stage,
 }))(TricksWon);
