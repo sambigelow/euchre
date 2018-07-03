@@ -61,6 +61,18 @@ const round = (state = initialRoundState, { type, cardToPickUp, trump }) => {
         currentTurn: PLAYERS[state.dealer].nextTo,
         stage: stages.PLAYING,
       };
+    case actionTypes.PLAY_CARD:
+      return {
+        ...state,
+        currentTurn: PLAYERS[state.currentTurn].nextTo,   
+      };
+    case actionTypes.ROUND_OVER:
+      return {
+        dealer: PLAYERS[dealer].nextTo,
+        stage: stages.PRE_DEAL,
+        passesCalled: 0,
+        currentTurn: PLAYERS[PLAYERS[dealer].nextTo].nextTo,
+      };
     default:
       return state;
   }

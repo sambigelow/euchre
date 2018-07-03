@@ -55,7 +55,7 @@ const hands = (
           error: `Can't play that card!`,
           cards: state[playedByIndex].cards,
         },
-        ...state.slice(playedByIndex),
+        ...state.slice(playedByIndex + 1),
       ];
     case actionTypes.PLAY_CARD:
       const playedCardIndex = state[playedByIndex].cards.indexOf(playedCard);
@@ -69,7 +69,7 @@ const hands = (
             ...state[playedByIndex].cards.slice(playedCardIndex + 1),
           ],
         },
-        ...state.slice(playedByIndex),
+        ...state.slice(playedByIndex + 1),
       ];
     case actionTypes.ROUND_OVER:
       return initialHandsState;

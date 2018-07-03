@@ -55,13 +55,16 @@ const findWinning = (trump, cards, firstTurn) => {
     (firstTurn + 3) % 4,
   ];
 
-  
   const orderedCards = getOrderedCards(trump);
   const leftSuit = getLeftSuit(trump);
 
   const winning = trickReordered.reduce((winner, currentCard, index) => {
     if (index === 0) {
       return { card: currentCard, index };
+    }
+
+    if (!currentCard.suit) {
+      return winner;
     }
 
     if (winner.card.suit === trump) {

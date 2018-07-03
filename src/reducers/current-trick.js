@@ -15,11 +15,14 @@ const currentTrick = (
 ) => {
   switch (type) {
     case actionTypes.PLAY_CARD:
-      return [
-        ...state.cards.slice(0, playedByIndex),
-        playedCard,
-        ...state.cards.slice(playedByIndex),
-      ];
+      return {
+        ...state,
+        cards: [
+          ...state.cards.slice(0, playedByIndex),
+          playedCard,
+          ...state.cards.slice(playedByIndex),
+        ],
+      };
     case actionTypes.PLAY_FOURTH_CARD:
       return {
         firstTurn: winner.index,
