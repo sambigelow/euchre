@@ -1,7 +1,7 @@
 import { firstPlayer } from '../utils/players';
 import { actionTypes } from '../utils/constants';
 
-const initialCards = [{}, {}, {}, {}];
+export const initialCards = [{}, {}, {}, {}];
 
 export const initialTrickState = {
   firstTurn: firstPlayer,
@@ -17,6 +17,7 @@ const currentTrick = (
     case actionTypes.PLAY_CARD:
       return {
         ...state,
+        winning: winner.index,
         cards: [
           ...state.cards.slice(0, playedByIndex),
           playedCard,
@@ -25,9 +26,8 @@ const currentTrick = (
       };
     case actionTypes.PLAY_FOURTH_CARD:
       return {
+        ...initialTrickState,
         firstTurn: winner.index,
-        winning: undefined,
-        cards: initialCards,
       };
     default:
       return state;

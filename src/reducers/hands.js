@@ -36,14 +36,13 @@ const hands = (
       ];
     case actionTypes.DISCARD:
       const indexToRemove = state[dealer].cards.indexOf(cardToDiscard);
-
       return [
         ...state.slice(0, dealer),
         {
           ...state[dealer],
           cards: [
             ...state[dealer].cards.slice(0, indexToRemove),
-            ...state[dealer].cards.slice(indexToRemove),
+            ...state[dealer].cards.slice(indexToRemove + 1),
           ],
         },
         ...state.slice(dealer + 1),
