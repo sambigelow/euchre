@@ -1,4 +1,4 @@
-import hands, { initialHandState } from './hands';
+import hands, { initialHandsState } from './hands';
 import { actionTypes } from '../utils/constants';
 import {
   hands as dealtHands,
@@ -7,7 +7,7 @@ import {
 import { firstDealer as dealer, firstPlayer } from '../utils/players';
 
 describe('hands reducer', () => {
-  const dealtState = hands(initialHandState, {
+  const dealtState = hands(initialHandsState, {
     type: actionTypes.DEAL,
     dealtHands,
   });
@@ -98,13 +98,30 @@ describe('hands reducer', () => {
     });
   });
 
-  const playedCard = 
-  const playedCardState = hands(unplayableCardState, {
+  const firstCard = dealtHands[firstPlayer][0];
+  const firstCardState = hands(unplayableCardState, {
     type: actionTypes.PLAY_CARD,
-    playedC
-  })
+    playedByIndex: firstPlayer,
+    playedCard: firstCard,
+  });
 
   describe('play card', () => {
+    it('sets error to null when card played successfully', () => {
+      expect(firstCardState[firstPlayer].error).toBeNull();
+    });
 
+    it('removes card from hand of playedBy player', () => {
+      const firstPlayerHand = firstCardState[firstPlayer].cards;
+
+      expect(firstPlayerHand).toHaveLength(4);
+      expect(firstPlayerHand).not.toContain(firstCard);
+    });
+  });
+
+  describe('round over', () => {
+    it('returns empty hands at end of round', () => {
+      const result = hands(firstCardState, { type: actionTypes.ROUND_OVER });
+      expect(result).toEqual(initialHandsState);
+    });
   });
 });
