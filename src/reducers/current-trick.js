@@ -11,17 +11,17 @@ export const initialTrickState = {
 
 const currentTrick = (
   state = initialTrickState,
-  { type, playedCard, playedByIndex, winner },
+  { type, playedCard, playedByIndex, winning, winner },
 ) => {
   switch (type) {
     case actionTypes.PLAY_CARD:
       return {
         ...state,
-        winning: winner.index,
+        winning: winning.index,
         cards: [
           ...state.cards.slice(0, playedByIndex),
           playedCard,
-          ...state.cards.slice(playedByIndex),
+          ...state.cards.slice(playedByIndex + 1),
         ],
       };
     case actionTypes.PLAY_FOURTH_CARD:

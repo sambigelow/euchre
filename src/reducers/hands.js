@@ -57,6 +57,7 @@ const hands = (
         ...state.slice(playedByIndex + 1),
       ];
     case actionTypes.PLAY_CARD:
+    case actionTypes.PLAY_FOURTH_CARD:
       const playedCardIndex = state[playedByIndex].cards.indexOf(playedCard);
 
       return [
