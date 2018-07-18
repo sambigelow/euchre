@@ -16,9 +16,15 @@ describe('calling', () => {
   });
 
   it('returns cardToDiscard', () => {
-    expect(discard(1)).toEqual({
+    const dispatch = jest.fn();
+    const getState = jest.fn().mockReturnValue({ round: { dealer: 1 } });
+
+    discard(1)(dispatch, getState);
+
+    expect(dispatch).toBeCalledWith({
       type: actionTypes.DISCARD,
       cardToDiscard: 1,
+      dealer: 1,
     });
   });
 });

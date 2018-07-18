@@ -90,7 +90,6 @@ const findWinning = (trump, cards, firstTurn) => {
     }
 
     if (currentCard.suit === winner.card.suit) {
-      console.log({ orderedCards, currentCard });
       const currentRanking = orderedCards[currentCard.suit].findIndex(
         card => card.value === currentCard.value,
       );

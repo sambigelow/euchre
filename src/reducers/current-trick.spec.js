@@ -15,21 +15,21 @@ describe('currentTrick reducer', () => {
     type: actionTypes.PLAY_CARD,
     playedCard: firstCard,
     playedByIndex: firstPlayer,
-    winner: { card: firstCard, index: firstPlayer },
+    winning: { card: firstCard, index: firstPlayer },
   });
 
   const secondPlayedState = currentTrick(firstPlayedState, {
     type: actionTypes.PLAY_CARD,
     playedCard: secondCard,
     playedByIndex: PLAYERS[firstPlayer].nextTo,
-    winner: { card: secondCard, index: secondPlayer },
+    winning: { card: secondCard, index: secondPlayer },
   });
 
   const thirdPlayedState = currentTrick(secondPlayedState, {
     type: actionTypes.PLAY_CARD,
     playedCard: thirdCard,
     playedByIndex: thirdPlayer,
-    winner: { card: thirdCard, index: secondPlayer },
+    winning: { card: thirdCard, index: secondPlayer },
   });
 
   const nextTrickState = currentTrick(thirdPlayedState, {

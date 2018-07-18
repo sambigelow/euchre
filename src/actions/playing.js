@@ -35,7 +35,6 @@ export const playCard = (playedCard, playedByIndex) => (dispatch, getState) => {
       trump,
     )
   ) {
-    console.log('Can play card');
     dispatch({
       type: actionTypes.PLAY_CARD,
       playedCard,
