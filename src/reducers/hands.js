@@ -36,14 +36,13 @@ const hands = (
       ];
     case actionTypes.DISCARD:
       const indexToRemove = state[dealer].cards.indexOf(cardToDiscard);
-
       return [
         ...state.slice(0, dealer),
         {
           ...state[dealer],
           cards: [
             ...state[dealer].cards.slice(0, indexToRemove),
-            ...state[dealer].cards.slice(indexToRemove),
+            ...state[dealer].cards.slice(indexToRemove + 1),
           ],
         },
         ...state.slice(dealer + 1),
@@ -58,6 +57,7 @@ const hands = (
         ...state.slice(playedByIndex + 1),
       ];
     case actionTypes.PLAY_CARD:
+    case actionTypes.PLAY_FOURTH_CARD:
       const playedCardIndex = state[playedByIndex].cards.indexOf(playedCard);
 
       return [

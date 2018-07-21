@@ -9,11 +9,13 @@ export const playCard = (playedCard, playedByIndex) => (dispatch, getState) => {
     hands,
   } = getState();
 
-  const winning = findWinning(
-    trump,
-    currentTrick.cards,
-    currentTrick.firstTurn,
-  );
+  const nextTrickCards = [
+    ...currentTrick.cards.slice(0, playedByIndex),
+    playedCard,
+    ...currentTrick.cards.slice(playedByIndex + 1),
+  ];
+
+  const winning = findWinning(trump, nextTrickCards, currentTrick.firstTurn);
 
   const isFinalCard = currentTrick.cards.filter(card => card.suit).length === 3;
 
@@ -21,12 +23,14 @@ export const playCard = (playedCard, playedByIndex) => (dispatch, getState) => {
     dispatch({
       type: actionTypes.PLAY_FOURTH_CARD,
       winner: winning,
+      playedCard,
+      playedByIndex,
     });
   } else if (
     playedByIndex === currentTrick.firstTurn ||
     canPlayCard(
-      playCard,
-      hands[playedByIndex],
+      playedCard,
+      hands[playedByIndex].cards,
       currentTrick.cards[currentTrick.firstTurn],
       trump,
     )

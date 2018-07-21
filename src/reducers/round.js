@@ -9,7 +9,10 @@ export const initialRoundState = {
   currentTurn: firstPlayer,
 };
 
-const round = (state = initialRoundState, { type, cardToPickUp, trump }) => {
+const round = (
+  state = initialRoundState,
+  { type, cardToPickUp, trump, winner },
+) => {
   switch (type) {
     case actionTypes.DEAL:
       return {
@@ -47,13 +50,6 @@ const round = (state = initialRoundState, { type, cardToPickUp, trump }) => {
         stage: stages.PLAYING,
         currentTurn: PLAYERS[state.dealer].nextTo,
       };
-    case actionTypes.ROUND_OVER:
-      return {
-        dealer: PLAYERS[dealer].nextTo,
-        stage: stages.PRE_DEAL,
-        passesCalled: 0,
-        currentTurn: PLAYERS[PLAYERS[dealer].nextTo].nextTo,
-      };
     case actionTypes.CALL_TRUMP:
       return {
         ...state,
@@ -64,7 +60,12 @@ const round = (state = initialRoundState, { type, cardToPickUp, trump }) => {
     case actionTypes.PLAY_CARD:
       return {
         ...state,
-        currentTurn: PLAYERS[state.currentTurn].nextTo,   
+        currentTurn: PLAYERS[state.currentTurn].nextTo,
+      };
+    case actionTypes.PLAY_FOURTH_CARD:
+      return {
+        ...state,
+        currentTurn: winner.index,
       };
     case actionTypes.ROUND_OVER:
       return {
